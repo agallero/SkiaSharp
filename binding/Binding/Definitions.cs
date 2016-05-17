@@ -295,6 +295,16 @@ namespace SkiaSharp
 		ClampToBlack,
 	}
 
+	public enum SKRegionOperation
+	{
+		Difference,
+		Intersect,
+		Union,
+		XOR,
+		ReverseDifference,
+		Replace,
+	}
+
 	[StructLayout(LayoutKind.Sequential)]
 	public struct SKImageInfo {
 		public static SKImageInfo Empty;
@@ -353,7 +363,7 @@ namespace SkiaSharp
 
 	[StructLayout(LayoutKind.Sequential)]
 	public struct SKSurfaceProps {
-		public SKPixelGeometry PixelGeometry { get; set; }
+		public SKPixelGeometry PixelGeometry;
 	}
 
 	[StructLayout(LayoutKind.Sequential)]

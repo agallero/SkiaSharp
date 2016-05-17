@@ -1,5 +1,7 @@
 # SkiaSharp
 
+[![Gitter.im](https://img.shields.io/badge/gitter.im-xamarin%2FXamarinComponents-E60256.svg)](https://gitter.im/xamarin/XamarinComponents)  [![NuGet](https://img.shields.io/nuget/v/SkiaSharp.svg?maxAge=2592000)](https://www.nuget.org/packages/SkiaSharp)  [![NuGet Pre Release](https://img.shields.io/nuget/vpre/SkiaSharp.svg?maxAge=2592000)](https://www.nuget.org/packages/SkiaSharp)
+
 SkiaSharp is a cross-platform 2D graphics API for .NET platforms based on Google's
 Skia Graphics Library (https://skia.org/).   It provides a comprehensive 2D API that can
 be used across mobile, server and desktop models to render images.
@@ -12,6 +14,7 @@ SkiaSharp provides a PCL and platform-specific bindings for:
  - Xamarin.Android
  - Xamarin.iOS
  - Windows Desktop
+ - Windows UWP
  - Mac Desktop
 
 You can also build this on your particular variant of Unix
@@ -42,23 +45,16 @@ Run from Bash
 
 ### Windows
 
-You need Python 2.7 in `PATH` environment variable. Then you need to run following commands from `skia` directory:
-
-    > ..\depot_tools\gclient.bat config --unmanaged https://github.com/mono/skia.git
-    > ..\depot_tools\gclient.bat sync
-
-The process will take some time while gclient downloads Skia build dependencies.
-
-Then you can finally build it:
+You need Python 2.7 in `PATH` environment variable. Then you can build it:
 
     > .\bootstrapper.ps1 -Target libs
-
 
 
 There are several targets available:
 
  - `externals` - builds all the native libraries
    - [win] `externals-windows` - builds the native libraries for Windows
+   - [win] `externals-uwp` - builds the native libraries for Windows UWP
    - [mac] `externals-osx` - builds the native libraries for Mac OS X
    - [mac] `externals-ios` - builds the native libraries for iOS
    - [mac] `externals-andoid` - builds the native libraries for Android
@@ -73,7 +69,7 @@ There are several targets available:
  - `clean` - cleans everything
    - `clean-externals` - cleans externals only
 
-## Where is Windows Phone / Store / tvOS
+## Where is Windows Phone 8 / Store 8 / tvOS
  
 We are working to add binaries for these platforms, stay tuned for a future release
 (or check the pull requests and branches, where we are working on those)
