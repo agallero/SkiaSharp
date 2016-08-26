@@ -93,7 +93,12 @@ namespace SkiaSharp
 		public SKManagedStream (Stream managedStream, bool disposeManagedStream)
 			: base (SkiaApi.sk_managedstream_new ())
 		{
-			managedStreams.Add (Handle, new WeakReference<SKManagedStream>(this));
+			if (Handle == IntPtr.Zero) {
+				throw new InvalidOperationException ("Unable to create a new SKManagedStream instance.");
+			}
+
+			lock (managedStreams)
+				managedStreams.Add (Handle, new WeakReference<SKManagedStream>(this));
 
 			stream = managedStream;
 			disposeStream = disposeManagedStream;
@@ -101,8 +106,10 @@ namespace SkiaSharp
 
 		protected override void Dispose (bool disposing)
 		{
-			if (managedStreams.ContainsKey(Handle)) {
-				managedStreams.Remove (Handle);
+			lock (managedStreams){
+				if (managedStreams.ContainsKey(Handle)) {
+					managedStreams.Remove (Handle);
+				}
 			}
 
 			if (disposeStream && stream != null) {
@@ -248,9 +255,11 @@ namespace SkiaSharp
 		private static bool AsManagedStream(IntPtr ptr, out SKManagedStream target)
 		{
 			WeakReference<SKManagedStream> weak;
-			if (managedStreams.TryGetValue (ptr, out weak)) {
-				if (weak.TryGetTarget(out target)) {
-					return true;
+			lock (managedStreams){
+				if (managedStreams.TryGetValue (ptr, out weak)) {
+					if (weak.TryGetTarget(out target)) {
+						return true;
+					}
 				}
 			}
 			target = null;

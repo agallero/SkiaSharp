@@ -1,4 +1,4 @@
-﻿//
+//
 // Low-level P/Invoke declarations
 //
 // Author:
@@ -37,15 +37,17 @@ namespace SkiaSharp
 	internal static class SkiaApi
 	{
 #if MONOTOUCH
-		const string SKIA = "@rpath/libskia_ios.framework/libskia_ios";
+		const string SKIA = "@rpath/libSkiaSharp.framework/libSkiaSharp";
 #elif __ANDROID__
-		const string SKIA = "libskia_android.so";
+		const string SKIA = "libSkiaSharp.so";
 #elif XAMARIN_MAC
-		const string SKIA = "libskia_osx.dylib";
+		const string SKIA = "libSkiaSharp.dylib";
 #elif DESKTOP
-		const string SKIA = "libskia_windows.dll"; // redirected using .dll.config to 'libskia_osx.dylib' on OS X
+		const string SKIA = "libSkiaSharp.dll"; // redirected using .dll.config to 'libSkiaSharp.dylib' on OS X
+#elif WINDOWS_UWP
+		const string SKIA = "libSkiaSharp.dll";
 #else
-		const string SKIA = "path_to_native.library";
+		const string SKIA = "libSkiaSharp";
 #endif
 
 		[DllImport(SKIA, CallingConvention = CallingConvention.Cdecl)]
@@ -148,6 +150,14 @@ namespace SkiaSharp
 		[DllImport(SKIA, CallingConvention = CallingConvention.Cdecl)]
 		public extern static void sk_canvas_get_total_matrix(sk_canvas_t canvas, ref SKMatrix matrix);
 
+		[DllImport(SKIA, CallingConvention = CallingConvention.Cdecl)]
+		public extern static void sk_canvas_clip_rect_with_operation(sk_canvas_t t, ref SKRect crect, SKRegionOperation op, bool doAA);
+		[DllImport(SKIA, CallingConvention = CallingConvention.Cdecl)]
+		public extern static void sk_canvas_clip_path_with_operation(sk_canvas_t t, sk_path_t cpath, SKRegionOperation op, bool doAA);
+		[DllImport(SKIA, CallingConvention = CallingConvention.Cdecl)]
+		public extern static bool sk_canvas_get_clip_device_bounds(sk_canvas_t t, ref SKRectI cbounds);
+		[DllImport(SKIA, CallingConvention = CallingConvention.Cdecl)]
+		public extern static bool sk_canvas_get_clip_bounds(sk_canvas_t t, ref SKRect cbounds);
 
 		[DllImport(SKIA, CallingConvention = CallingConvention.Cdecl)]
 		public extern static sk_paint_t sk_paint_new();
@@ -247,26 +257,20 @@ namespace SkiaSharp
 		[DllImport(SKIA, CallingConvention = CallingConvention.Cdecl)]
 		public extern static float sk_paint_measure_text(sk_paint_t t, IntPtr text, IntPtr length, IntPtr boundsZero);
 
-		[DllImport (SKIA, CallingConvention = CallingConvention.Cdecl)]
-		public extern static float sk_paint_measure_utf16_text (sk_paint_t t, [MarshalAs(UnmanagedType.LPWStr)] string text, IntPtr length, ref SKRect bounds);
-		[DllImport (SKIA, CallingConvention = CallingConvention.Cdecl)]
-		public extern static float sk_paint_measure_utf16_text (sk_paint_t t, [MarshalAs(UnmanagedType.LPWStr)] string text, IntPtr length, IntPtr boundsZero);
 
 		[DllImport(SKIA, CallingConvention = CallingConvention.Cdecl)]
 		public extern static IntPtr sk_paint_break_text(sk_paint_t t, IntPtr text, IntPtr length, float maxWidth, out float measuredWidth);
 		[DllImport(SKIA, CallingConvention = CallingConvention.Cdecl)]
-		public extern static IntPtr sk_paint_break_utf16_text(sk_paint_t t, [MarshalAs(UnmanagedType.LPWStr)] string text, IntPtr length, float maxWidth, out float measuredWidth);
-		[DllImport (SKIA, CallingConvention = CallingConvention.Cdecl)]
 		public extern static IntPtr sk_paint_break_text (sk_paint_t t, byte [] text, IntPtr length, float maxWidth, out float measuredWidth);
 
 		[DllImport(SKIA, CallingConvention = CallingConvention.Cdecl)]
 		public extern static sk_path_t sk_paint_get_text_path(sk_paint_t t, IntPtr text, IntPtr length, float x, float y);
 		[DllImport(SKIA, CallingConvention = CallingConvention.Cdecl)]
-		public extern static sk_path_t sk_paint_get_utf16_text_path(sk_paint_t t, [MarshalAs(UnmanagedType.LPWStr)] string text, IntPtr lengthInChars, float x, float y);
+		public extern static sk_path_t sk_paint_get_text_path(sk_paint_t t, byte [] text, IntPtr length, float x, float y);
 		[DllImport(SKIA, CallingConvention = CallingConvention.Cdecl)]
 		public extern static sk_path_t sk_paint_get_pos_text_path(sk_paint_t t, IntPtr text, IntPtr length, [In] SKPoint[] points);
 		[DllImport(SKIA, CallingConvention = CallingConvention.Cdecl)]
-		public extern static sk_path_t sk_paint_get_pos_utf16_text_path(sk_paint_t t, [MarshalAs(UnmanagedType.LPWStr)] string text, IntPtr lengthInChars, [In] SKPoint[] points);
+		public extern static sk_path_t sk_paint_get_pos_text_path(sk_paint_t t, byte [] text, IntPtr length, [In] SKPoint[] points);
 
 		[DllImport(SKIA, CallingConvention = CallingConvention.Cdecl)]
 		public extern static float sk_paint_get_fontmetrics(sk_paint_t t, out SKFontMetrics fontMetrics, float scale);
